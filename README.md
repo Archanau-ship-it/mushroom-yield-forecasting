@@ -369,3 +369,36 @@ The model performance was evaluated using:
 - Evaluated regression performance using MAE, RMSE, and R².
 - Performed residual analysis to identify potential model limitations.
 - Saved the trained model for future prediction and comparison with advanced models.
+
+Train a Random Forest Regressor to predict mushroom yield using environmental sensor data and compare its performance with the Linear Regression baseline.
+
+Methodology
+Loaded the processed feature dataset.
+Used an 80:20 time-based train-test split to preserve the chronological order of sensor readings.
+Trained a RandomForestRegressor with 100 decision trees (n_estimators=100).
+Evaluated the model using MAE, RMSE, and R².
+Compared the Random Forest model with the previously trained Linear Regression model.
+Performed TimeSeriesSplit Cross Validation (5 folds) to evaluate model stability on time-series data.
+Generated a Feature Importance chart to identify the most influential environmental variables.
+Saved the trained model and evaluation reports.
+Evaluation Metrics
+MAE (Mean Absolute Error): Average prediction error.
+RMSE (Root Mean Squared Error): Penalizes larger prediction errors.
+R² Score: Measures how well the model explains the variation in mushroom yield.
+
+Output Files
+models/
+└── random_forest.joblib
+
+reports/
+├── rf_metrics.json
+├── comparison_table.csv
+├── cv_results.md
+
+reports/figures/
+└── rf_importance.png
+Key Findings
+Random Forest captured nonlinear relationships between environmental factors and mushroom yield.
+TimeSeriesSplit Cross Validation provided a reliable estimate of model performance on sequential data.
+Feature importance analysis identified the most influential variables affecting yield.
+Model performance was compared with the Linear Regression baseline to evaluate improvements in prediction accuracy.
