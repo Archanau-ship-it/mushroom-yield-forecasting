@@ -329,3 +329,43 @@ The processed and scaled dataset was saved as:
 data/processed/features.parquet
 
 Saving the processed features eliminates the need to repeat preprocessing before every model training step
+
+
+## 📌 Objective
+Build an interpretable baseline machine learning model to predict mushroom yield using environmental sensor features and evaluate its performance using regression metrics.
+In this task, a **Linear Regression** model was trained on the processed and MinMax-scaled dataset to establish a baseline for future machine learning models. The model learns the relationship between environmental factors and mushroom yield by fitting a linear equation to the training data.
+
+#
+
+## ⚙️ Workflow
+1. Loaded the processed feature dataset.
+2. Split the data into training and testing sets.
+3. Trained a **Linear Regression** model using Scikit-learn.
+4. Predicted mushroom yield on the test dataset.
+5. Evaluated model performance using:
+   - Mean Absolute Error (MAE)
+   - Root Mean Squared Error (RMSE)
+   - R² Score
+6. Analyzed feature coefficients for interpretability.
+7. Generated residual plots to evaluate prediction errors.
+8. Saved the trained model and evaluation metrics.
+
+## 📈 Evaluation Metrics
+The model performance was evaluated using:
+- **MAE:** Average prediction error in kilograms.
+- **RMSE:** Penalizes larger prediction errors.
+- **R² Score:** Indicates how well the model explains the variation in mushroom yield.
+
+## 📂 Generated Outputs
+- `models/linear_regression.joblib` – Trained Linear Regression model.
+- `reports/linear_metrics.json` – Saved evaluation metrics.
+- `reports/figures/residuals_vs_predicted.png` – Residuals vs Predicted Yield plot.
+- `reports/figures/residuals_vs_humidity.png` – Residuals vs Humidity plot.
+- `reports/linear_diagnostics.md` – Model diagnostic observations.
+
+## 🔍 Key Learning Outcomes
+- Built an interpretable baseline regression model.
+- Understood the effect of each feature through model coefficients.
+- Evaluated regression performance using MAE, RMSE, and R².
+- Performed residual analysis to identify potential model limitations.
+- Saved the trained model for future prediction and comparison with advanced models.
