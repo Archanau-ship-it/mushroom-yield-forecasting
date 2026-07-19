@@ -2,6 +2,9 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
+import csv
+import os
+from datetime import datetime, timezone
 
 # ==========================================================
 # PAGE CONFIG (must be the first Streamlit command)
@@ -18,9 +21,23 @@ st.set_page_config(
 # ==========================================================
 @st.cache_resource
 def load_model():
-    model = joblib.load("models/champion.joblib")
-    scaler = joblib.load("models/scaler.joblib")
-    return model, scaler
+    try:
+        model = joblib.load("models/champion.joblib")
+        scaler = joblib.load("models/scaler.joblib")
+        return model, scaler
+
+    except FileNotFoundError:
+        st.error(
+            "❌ Model files not found.\n\n"
+            "Please run the training pipeline first to generate:\n"
+            "- models/champion.joblib\n"
+            "- models/scaler.joblib"
+        )
+        st.stop()
+
+    except Exception as e:
+        st.error(f"❌ Unable to load model: {e}")
+        st.stop()
 
 
 model, scaler = load_model()
@@ -49,6 +66,42 @@ def predict_yield(temperature, humidity, co2, light):
 
     prediction = model.predict(scaled_df)
     return prediction[0]
+
+
+# ==========================================================
+# LIGHTWEIGHT PREDICTION LOGGING
+# ==========================================================
+# Records every prediction request (inputs + output) to a CSV.
+# This is what makes monitoring possible after deployment — without
+# it, you have no way to know what real users are feeding the model
+# or whether its outputs look sane over time.
+#
+# NOTE: On Streamlit Community Cloud, the filesystem is EPHEMERAL —
+# it resets whenever the app restarts or redeploys. This is fine for
+# demonstrating the logging mechanism (Task 9's requirement), but a
+# real production system would write these rows to a persistent
+# store instead (e.g. a hosted database, Google Sheets via API, or
+# an external logging service). This tradeoff is documented in
+# docs/monitoring.md.
+LOG_PATH = "logs/prediction_log.csv"
+
+
+def log_prediction(temperature, humidity, co2, light, prediction):
+    os.makedirs("logs", exist_ok=True)
+    file_exists = os.path.isfile(LOG_PATH)
+
+    with open(LOG_PATH, "a", newline="") as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow([
+                "timestamp_utc", "temperature", "humidity",
+                "co2", "light", "predicted_yield_kg"
+            ])
+        writer.writerow([
+            datetime.now(timezone.utc).isoformat(),
+            temperature, humidity, co2, light,
+            round(float(prediction), 4)
+        ])
 
 
 # ==========================================================
@@ -305,6 +358,7 @@ with left_col:
 
     if predict_clicked:
         prediction = predict_yield(temperature, humidity, co2, light)
+        log_prediction(temperature, humidity, co2, light, prediction)
 
         st.metric(label="Estimated Daily Yield", value=f"{prediction:.2f} kg")
 
@@ -401,6 +455,23 @@ with info_col3:
         6. Select champion by best overall metrics
         7. Deploy via this dashboard
         """)
+
+# ==========================================================
+# MONITORING — recent prediction log
+# ==========================================================
+with st.expander("🩺 Monitoring: Recent Prediction Log"):
+    if os.path.isfile(LOG_PATH):
+        log_df = pd.read_csv(LOG_PATH)
+        st.caption(f"{len(log_df)} predictions logged this session/deployment.")
+        st.dataframe(log_df.tail(20), use_container_width=True)
+        st.download_button(
+            "⬇ Download Full Log (CSV)",
+            log_df.to_csv(index=False),
+            file_name="prediction_log.csv",
+            mime="text/csv"
+        )
+    else:
+        st.info("No predictions logged yet. Click **Predict Yield** to generate the first log entry.")
 
 st.markdown("---")
 st.caption("Zelbytes Agritech · Built with Streamlit, Scikit-learn, Pandas & NumPy")
