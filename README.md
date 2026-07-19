@@ -1,79 +1,245 @@
 # 🍄 Mushroom Yield Forecasting
 
-## Project Overview
+> An end-to-end Machine Learning application for predicting mushroom yield using environmental sensor data, featuring data preprocessing, model training, interactive visualization, and cloud deployment with Streamlit.
 
-The aim of this project is to analyze environmental sensor data collected from a mushroom polyhouse and prepare it for machine learning. The project focuses on reading the raw data, cleaning it, analyzing the relationship between environmental conditions and mushroom yield, and creating visual reports.
+---
 
-The environmental factors used in this project are:
+## 📖 Overview
+
+Mushroom cultivation requires maintaining an optimal growing environment to achieve consistent and high-quality yield. Even small fluctuations in temperature, humidity, or carbon dioxide concentration can significantly impact production.
+
+This project develops a complete machine learning pipeline that predicts mushroom yield from environmental sensor readings. It includes data preprocessing, exploratory data analysis, feature engineering, model training, hyperparameter tuning, deployment through Streamlit, and lightweight monitoring for production readiness.
+
+The application enables growers to estimate expected yield based on real-time environmental conditions, allowing better operational planning and environmental control.
+
+---
+
+## 🚀 Features
+
+- End-to-end machine learning workflow
+- Automated data preprocessing pipeline
+- Exploratory Data Analysis (EDA)
+- Feature Engineering
+- Linear Regression baseline model
+- Random Forest regression model
+- Hyperparameter tuning using GridSearchCV
+- Champion model selection
+- Interactive Streamlit web application
+- Prediction validation and sanity checks
+- Friendly error handling
+- Lightweight prediction monitoring
+- Cloud deployment ready
+
+---
+
+# Project Architecture
+
+```
+                Raw Sensor Data
+                       │
+                       ▼
+             Data Cleaning Pipeline
+                       │
+                       ▼
+             Feature Engineering
+                       │
+                       ▼
+               Model Training
+                       │
+                       ▼
+           Hyperparameter Tuning
+                       │
+                       ▼
+            Champion Model Saved
+                       │
+                       ▼
+              Streamlit Web App
+                       │
+                       ▼
+             Yield Prediction
+```
+
+---
+
+# Dataset
+
+The dataset contains environmental sensor readings collected from a mushroom growing environment.
+
+### Input Features
 
 - Temperature (°C)
 - Humidity (%)
 - CO₂ (ppm)
-- Light
+- Light Intensity
+
+### Target Variable
+
 - Mushroom Yield (kg)
 
 ---
 
-# Project Folder Structure
+# Machine Learning Pipeline
+
+The project follows a production-oriented workflow.
+
+### 1. Data Collection
+
+Sensor readings are loaded from CSV files.
+
+---
+
+### 2. Data Cleaning
+
+The preprocessing pipeline performs:
+
+- Missing value handling
+- Datetime conversion
+- Data type correction
+- Duplicate removal
+- Invalid record filtering
+
+---
+
+### 3. Exploratory Data Analysis
+
+The project includes:
+
+- Statistical summaries
+- Correlation analysis
+- Scatter plots
+- Distribution plots
+- Missing value analysis
+
+---
+
+### 4. Feature Engineering
+
+Additional predictive features are created, including:
+
+- Temperature × Humidity interaction
+- Time-aware preprocessing
+- Feature scaling using MinMaxScaler
+
+---
+
+### 5. Model Training
+
+Multiple regression models were evaluated.
+
+- Linear Regression
+- Random Forest Regressor
+
+---
+
+### 6. Hyperparameter Optimization
+
+Random Forest was optimized using:
+
+- GridSearchCV
+- TimeSeriesSplit Cross Validation
+
+The best-performing model is selected as the Champion Model.
+
+---
+
+## 🖥️ Streamlit Application
+
+The project includes an interactive dashboard where users can:
+
+- Enter environmental conditions
+- Predict mushroom yield
+- View prediction instantly
+- Receive validation messages
+- Handle invalid inputs gracefully
+
+The application includes:
+
+- Loading spinner
+- Friendly error handling
+- Formatted prediction output
+- Prediction sanity checks
+
+---
+
+## 📂 Project Structure
 
 ```
 mushroom-yield-forecasting/
 │
+├── app.py
+├── requirements.txt
+├── README.md
+│
 ├── data/
 │   ├── raw/
-│   │   └── sensor_data.csv
-│   │
-│   ├── processed/
-│   │   ├── 02_cleaned.csv
-│   │   └── 02_cleaned.parquet
+│   └── processed/
+│
+├── models/
+│   ├── champion.joblib
+│   └── scaler.joblib
+│
+├── reports/
+│   └── figures/
 │
 ├── src/
 │   ├── ingestion.py
 │   ├── cleaning.py
-│   └── eda.py
+│   ├── feature_engineering.py
+│   ├── train.py
+│   ├── predict.py
+│   ├── champion_model.py
+│   └── app.py
 │
-├── reports/
-│   ├── eda_summary.md
-│   └── figures/
-│       ├── correlation_heatmap.png
-│       ├── humidity_vs_yield.png
-│       └── co2_vs_yield.png
-│
-├── notebooks/
-│
-├── models/
-│
-├── requirements.txt
-│
-└── README.md
+└── tests/
+    └── test_predict.py
 ```
 
 ---
 
 # Technologies Used
 
-- Python 3.10+
+### Programming Language
+
+- Python
+
+### Libraries
+
 - Pandas
 - NumPy
+- Scikit-learn
+- Joblib
+- Streamlit
 - Matplotlib
-- Seaborn
-- PyArrow
+
+### Development Tools
+
+- VS Code
 - Git
 - GitHub
 
 ---
 
-# Environment Setup
+# Installation
 
-## Create Virtual Environment
+Clone the repository
+
+```bash
+git clone https://github.com/Archanau-ship-it/mushroom-yield-forecasting.git
+```
+
+Move into the project
+
+```bash
+cd mushroom-yield-forecasting
+```
+
+Create a virtual environment
 
 ```bash
 python -m venv venv
 ```
 
----
-
-## Activate Virtual Environment
+Activate the environment
 
 ### Windows
 
@@ -81,324 +247,116 @@ python -m venv venv
 venv\Scripts\activate
 ```
 
-
-## Install Required Libraries
-
-```bash
-pip install pandas numpy matplotlib seaborn pyarrow
-```
-
----
-
-## Save Installed Packages
+### Linux / macOS
 
 ```bash
-pip freeze > requirements.txt
+source venv/bin/activate
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
 ```
 
 ---
 
-# Task 1 : Data Ingestion
+# Running the Application
 
-## Objective
+Run the Streamlit app
 
-Load the raw sensor dataset into Python and verify that the dataset is correct before performing any analysis.
-
-## Methodology
-
-- Read the CSV file using Pandas.
-- Convert the CSV into a DataFrame.
-- Display the first five rows.
-- Check the number of rows and columns.
-- Verify the column names.
-- Check data types.
-- Identify missing values.
-
-## Output
-
-The program displays:
-
-- Dataset Shape
-- Dataset Information
-- Column Names
-- Missing Values
-- Sample Records
-
----
-
-# Task 2 : Data Cleaning
-
-## Objective
-
-Improve the quality of the dataset by handling missing values and preparing clean data for further analysis.
-
-## Methodology
-
-- Load the raw dataset.
-- Identify missing values.
-- Replace missing Temperature values using the column mean.
-- Replace missing Humidity values using the column mean.
-- Replace missing CO₂ values using the column median.
-- Remove rows with missing Yield values.
-- Verify that no missing values remain.
-- Save the cleaned dataset as CSV and Parquet files.
-
-## Output
-
-Generated files:
-
-```
-data/processed/02_cleaned.csv
+```bash
+streamlit run app.py
 ```
 
+or
+
+```bash
+streamlit run src/app.py
 ```
-data/processed/02_cleaned.parquet
+
+(depending on your project structure)
+
+---
+
+# Model Performance
+
+The project evaluates models using:
+
+- Mean Absolute Error (MAE)
+- Root Mean Squared Error (RMSE)
+- R² Score
+
+The best-performing model is automatically selected and saved as the Champion Model.
+
+---
+
+# Testing
+
+The project includes prediction validation tests.
+
+Example:
+
+```bash
+pytest
 ```
 
----
+Tests verify:
 
-# Task 3 : Exploratory Data Analysis (EDA)
-
-## Objective
-
-Understand the relationship between environmental conditions and mushroom yield using statistics and visualizations.
-
-## Methodology
-
-- Load the cleaned dataset.
-- Check the date range.
-- Generate summary statistics.
-- Detect rule violations.
-- Calculate the correlation between variables.
-- Create a correlation heatmap.
-- Create scatter plots:
-  - Humidity vs Yield
-  - CO₂ vs Yield
-- Save all figures inside the reports folder.
-
-## Output
-
-Generated Figures
-
-- Correlation Heatmap
-- Humidity vs Yield Scatter Plot
-- CO₂ vs Yield Scatter Plot
+- Prediction returns float values
+- Predictions remain within reasonable ranges
+- Application output matches prediction pipeline
+- Model artifacts load correctly
 
 ---
 
-# Data Cleaning Strategy
+# Deployment
 
-| Column | Method Used | Reason |
-|---------|-------------|--------|
-| Temperature | Mean | Continuous numerical data |
-| Humidity | Mean | Small number of missing values |
-| CO₂ | Median | Less affected by outliers |
-| Yield | Removed Missing Rows | Target variable should not contain missing values |
+The application is designed for deployment on Streamlit Community Cloud.
 
----
+Deployment includes:
 
-# Rule Validation
+- Version-pinned dependencies
+- Model artifact loading
+- Production-ready prediction interface
+- Friendly error handling
 
-The following checks were performed on the cleaned dataset.
 
-| Rule | Validation |
-|-------|------------|
-| Temperature ≥ 0°C | Passed |
-| Humidity ≤ 100% | Passed |
-| CO₂ ≥ 0 ppm | Passed |
-| Yield ≥ 0 kg | Passed |
+# Monitoring
 
-No rule violations were found in the cleaned dataset.
+The application supports lightweight monitoring by logging:
+
+- Timestamp
+- Sensor Inputs
+- Predicted Yield
+
+Monitoring helps identify unusual prediction patterns and determine when retraining may be required.
 
 ---
 
-# Visualizations
+# Future Improvements
 
-The following visualizations were created.
-
-### Correlation Heatmap
-
-Shows the relationship between environmental variables and mushroom yield.
-
-### Humidity vs Yield
-
-Shows how humidity changes affect mushroom yield.
-
-### CO₂ vs Yield
-
-Shows how carbon dioxide concentration affects mushroom yield.
+- Real-time IoT sensor integration
+- Weather API integration
+- Deep Learning models
+- Time-series forecasting
+- Automated model retraining
+- Docker containerization
+- CI/CD pipeline
+- Database-backed prediction history
+- User authentication
+- Mobile-friendly dashboard
 
 ---
-The cleaned dataset was loaded from:
-data/processed/02_cleaned.parquet
 
-The dataset contains the following columns:
-Timestamp
-Temperature
-Humidity
-CO2
-Light
-Yield
-Feature Engineering
+# Author
 
-The following input features were selected:
+**Archana Unnikrishnan**
 
-Temperature
-Humidity
-CO2
-Light
+Computer Science Engineering Student
 
-An additional engineered feature was created:
+GitHub: https://github.com/Archanau-ship-it
 
-Temp_Humidity
-Temp_Humidity = Temperature × Humidity
+# License
 
-This feature represents the combined effect of temperature and humidity on mushroom growth. Since mushroom yield depends on both environmental conditions together, this interaction feature provides additional information to the machine learning model.
-
-Feature Matrix (X)
-The feature matrix X contains the following columns:
-Temperature
-Humidity
-CO2
-Light
-Temp_Humidity
-
-These are the input variables used for training the model.
-The target variable is:
-Yield
-This is the value that the machine learning model will predict.
-
-Chronological Train-Test Split
-Since this is time-series data, a chronological split was used instead of a random split.
-
-Training Data: First 80% of the dataset
-Testing Data: Remaining 20% of the dataset
-
-This approach ensures that past observations are used to predict future observations and prevents information from the future leaking into the training process.
-
-Split Summary
-Dataset	Rows
-Training	76
-Testing	20
-Training Period
-2026-01-01 00:00:00
-to
-2026-01-04 05:00:00
-Testing Period
-2026-01-04 06:00:00
-to
-2026-01-05 03:00:00
-Feature Scaling
-
-Feature scaling was performed using MinMaxScaler.
-
-The scaler converts all numerical features into a range between 0 and 1.
-
-This ensures that all features contribute equally during model training and prevents features with larger numerical values from dominating the learning process.
-
-To avoid data leakage, the scaler was:
-Fitted only on the training dataset
-Applied to both training and testing datasets using the same scaling parameters
-Why Data Leakage Was Avoided
-
-The test dataset should represent unseen future data.
-If the scaler is fitted using the entire dataset before splitting, it learns information from the testing data, resulting in data leakage.
-
-To prevent this:
-
-The dataset was first split into training and testing sets.
-The scaler was fitted only on the training data.
-The trained scaler was then used to transform both datasets.
-
-This follows machine learning best practices.
-
-Saving the Scaler
-
-The trained MinMaxScaler was saved using Joblib.
-
-Saved file:
-
-models/scaler.joblib
-
-Saving the scaler allows the same preprocessing steps to be applied to future data before making predictions.
-
-Saving Processed Features
-
-The processed and scaled dataset was saved as:
-
-data/processed/features.parquet
-
-Saving the processed features eliminates the need to repeat preprocessing before every model training step
-
-
-## 📌 Objective
-Build an interpretable baseline machine learning model to predict mushroom yield using environmental sensor features and evaluate its performance using regression metrics.
-In this task, a **Linear Regression** model was trained on the processed and MinMax-scaled dataset to establish a baseline for future machine learning models. The model learns the relationship between environmental factors and mushroom yield by fitting a linear equation to the training data.
-
-#
-
-## ⚙️ Workflow
-1. Loaded the processed feature dataset.
-2. Split the data into training and testing sets.
-3. Trained a **Linear Regression** model using Scikit-learn.
-4. Predicted mushroom yield on the test dataset.
-5. Evaluated model performance using:
-   - Mean Absolute Error (MAE)
-   - Root Mean Squared Error (RMSE)
-   - R² Score
-6. Analyzed feature coefficients for interpretability.
-7. Generated residual plots to evaluate prediction errors.
-8. Saved the trained model and evaluation metrics.
-
-## 📈 Evaluation Metrics
-The model performance was evaluated using:
-- **MAE:** Average prediction error in kilograms.
-- **RMSE:** Penalizes larger prediction errors.
-- **R² Score:** Indicates how well the model explains the variation in mushroom yield.
-
-## 📂 Generated Outputs
-- `models/linear_regression.joblib` – Trained Linear Regression model.
-- `reports/linear_metrics.json` – Saved evaluation metrics.
-- `reports/figures/residuals_vs_predicted.png` – Residuals vs Predicted Yield plot.
-- `reports/figures/residuals_vs_humidity.png` – Residuals vs Humidity plot.
-- `reports/linear_diagnostics.md` – Model diagnostic observations.
-
-## 🔍 Key Learning Outcomes
-- Built an interpretable baseline regression model.
-- Understood the effect of each feature through model coefficients.
-- Evaluated regression performance using MAE, RMSE, and R².
-- Performed residual analysis to identify potential model limitations.
-- Saved the trained model for future prediction and comparison with advanced models.
-
-Train a Random Forest Regressor to predict mushroom yield using environmental sensor data and compare its performance with the Linear Regression baseline.
-
-Methodology
-Loaded the processed feature dataset.
-Used an 80:20 time-based train-test split to preserve the chronological order of sensor readings.
-Trained a RandomForestRegressor with 100 decision trees (n_estimators=100).
-Evaluated the model using MAE, RMSE, and R².
-Compared the Random Forest model with the previously trained Linear Regression model.
-Performed TimeSeriesSplit Cross Validation (5 folds) to evaluate model stability on time-series data.
-Generated a Feature Importance chart to identify the most influential environmental variables.
-Saved the trained model and evaluation reports.
-Evaluation Metrics
-MAE (Mean Absolute Error): Average prediction error.
-RMSE (Root Mean Squared Error): Penalizes larger prediction errors.
-R² Score: Measures how well the model explains the variation in mushroom yield.
-
-Output Files
-models/
-└── random_forest.joblib
-
-reports/
-├── rf_metrics.json
-├── comparison_table.csv
-├── cv_results.md
-
-reports/figures/
-└── rf_importance.png
-Key Findings
-Random Forest captured nonlinear relationships between environmental factors and mushroom yield.
-TimeSeriesSplit Cross Validation provided a reliable estimate of model performance on sequential data.
-Feature importance analysis identified the most influential variables affecting yield.
-Model performance was compared with the Linear Regression baseline to evaluate improvements in prediction accuracy.
+This project is developed for educational and research purposes.
