@@ -333,6 +333,20 @@ The application supports lightweight monitoring by logging:
 Monitoring helps identify unusual prediction patterns and determine when retraining may be required.
 
 ---
+## 📈 Monitoring
+
+The application logs every prediction made through the Streamlit interface, including:
+
+- Timestamp
+- Temperature
+- Humidity
+- CO₂
+- Light
+- Predicted Yield
+
+For details about the monitoring strategy, retraining policy, and logging implementation, see:
+
+📄 [Monitoring Plan](docs/monitoring_plan.md)
 
 # Future Improvements
 
@@ -348,6 +362,11 @@ Monitoring helps identify unusual prediction patterns and determine when retrain
 - Mobile-friendly dashboard
 
 ---
+screenshots
+
+![alt text](image.png)
+![alt text](image-1.png)
+
 
 # Author
 
@@ -356,6 +375,7 @@ Monitoring helps identify unusual prediction patterns and determine when retrain
 Computer Science Engineering Student
 
 GitHub: https://github.com/Archanau-ship-it
+steamlit: https://zelbytes-yield-forecastingstreamlit.app/
 
 # License
 
